@@ -1,6 +1,6 @@
 #!/bin/bash
 
-experiment=$1
+experiment=$1  # xgb_only_zc
 
 if [ -z "$experiment" ]
 then
@@ -9,23 +9,25 @@ then
 fi
 
 searchspace=nasbench201
-datasets=(cifar100) #cifar10 cifar100 ImageNet16-120)
+datasets=(cifar10 cifar100 ImageNet16-120)
 
-ks=(1 2 3 4 5 6 7 8 9 10 11 12 13)
+ks=(14 15)
 proxies=(
-"synflow"
-"synflow plain"
-"synflow plain l2_norm"
-"synflow plain l2_norm flops"
-"synflow plain l2_norm flops snip"
-"synflow plain l2_norm flops snip grad_norm"
-"synflow plain l2_norm flops snip grad_norm nwot"
-"synflow plain l2_norm flops snip grad_norm nwot zen"
-"synflow plain l2_norm flops snip grad_norm nwot zen fisher"
-"synflow plain l2_norm flops snip grad_norm nwot zen fisher jacov"
-"synflow plain l2_norm flops snip grad_norm nwot zen fisher jacov epe_nas"
-"synflow plain l2_norm flops snip grad_norm nwot zen fisher jacov epe_nas params"
-"synflow plain l2_norm flops snip grad_norm nwot zen fisher jacov epe_nas params grasp"
+# "synflow"
+# "synflow plain"
+# "synflow plain l2_norm"
+# "synflow plain l2_norm flops"
+# "synflow plain l2_norm flops snip"
+# "synflow plain l2_norm flops snip grad_norm"
+# "synflow plain l2_norm flops snip grad_norm nwot"
+# "synflow plain l2_norm flops snip grad_norm nwot zen"
+# "synflow plain l2_norm flops snip grad_norm nwot zen fisher"
+# "synflow plain l2_norm flops snip grad_norm nwot zen fisher jacov"
+# "synflow plain l2_norm flops snip grad_norm nwot zen fisher jacov epe_nas"
+# "synflow plain l2_norm flops snip grad_norm nwot zen fisher jacov epe_nas params"
+"synflow plain l2_norm flops snip grad_norm nwot zen fisher jacov epe_nas params grasp min_depth"
+"synflow plain l2_norm flops snip grad_norm nwot zen fisher jacov epe_nas params grasp min_depth max_depth"
+
 )
 
 for i in "${!proxies[@]}"

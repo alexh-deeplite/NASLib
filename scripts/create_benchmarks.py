@@ -25,20 +25,20 @@ if __name__ == '__main__':
     benchmark_search_space = args.search_space
     print(benchmark_search_space)
 
-    files = find_files(f'run/xgb_correlation/{benchmark_search_space}', 'benchmark.json')
-
+    files = find_files('naslib/data/zc_benchmarks/', '*.json')
+    print(files)
     filtered_files = []
     search_spaces = []
     datasets = []
 
-    for f in files:
-        components = f.split('/')
-        search_space, dataset, n_models, seed = components[-5], components[-4], int(components[-3]), components[-2]
+    # for f in files:
+    #     components = f.split('/')
+    #     search_space, dataset, n_models, seed = components[-5], components[-4], int(components[-3]), components[-2]
 
-        if n_models == N_MODELS_PER_SEED and search_space == benchmark_search_space:
-            search_spaces.append(search_space)
-            datasets.append(dataset)
-            filtered_files.append(f)
+    #     if n_models == N_MODELS_PER_SEED and search_space == benchmark_search_space:
+    #         search_spaces.append(search_space)
+    #         datasets.append(dataset)
+    #         filtered_files.append(f)
 
     print_neat(filtered_files)
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
         data[search_space][dataset].update(zc_benchmarks)
 
-    results_file = f'naslib/data/zc_{search_space}.json'
+    results_file = f'naslib/data/zc_{search_space}_extra.json'
     with open(results_file, 'w') as f:
         json.dump(data, f)
 

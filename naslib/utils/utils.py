@@ -162,8 +162,16 @@ def get_config_from_args(args=None):
         config.test_data_file = None
 
     # prepare the output directories
-    config.save = "{}/{}/{}/{}/k_{}/train_size{}/seed_{}".format(
-    # config.save = "{}/{}/{}/{}/k_{}/seed_{}".format(
+    config.save = "{}/{}/{}/{}/{}/{}".format(
+        config.out_dir,
+        config.config_type,
+        config.search_space,
+        config.dataset,
+        config.predictor,
+        config.seed,
+    )
+    if getattr(config, "train_size", None):
+        config.save = "{}/{}/{}/{}/{}/{}/{}".format(
         config.out_dir,
         config.config_type,
         config.search_space,

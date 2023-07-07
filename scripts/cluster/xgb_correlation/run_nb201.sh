@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # train_sizes=(5 8 14 24 42 71 121 205 347 589 1000) #(1000) #(10 15 23 36 56 87 135 209 323 500)
-train_sizes=(1000)
+# train_sizes=(1000)
+train_sizes=(5 8 14 24 42 71 121 205 347 589 1000)
 searchspace=nasbench201
 # datasets=(cifar10 cifar100 ImageNet16-120)
 ks=(1 2 3 4 5 6 7 8 9 10 11 12 13)

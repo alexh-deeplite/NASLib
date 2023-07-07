@@ -6,16 +6,23 @@
 #SBATCH --mem=MEM_FOR_JOB
 #SBATCH --job-name="THE_JOB_NAME"
 
-echo "Workingdir: $PWD";
-echo "Started at $(date)";
-echo "Running job $SLURM_JOB_NAME using $SLURM_JOB_CPUS_PER_NODE cpus per node with given JID $SLURM_JOB_ID on queue $SLURM_JOB_PARTITION";
+# echo "Workingdir: $PWD";
+# echo "Started at $(date)";
+# echo "Running job $SLURM_JOB_NAME using $SLURM_JOB_CPUS_PER_NODE cpus per node with given JID $SLURM_JOB_ID on queue $SLURM_JOB_PARTITION";
 
 searchspace=$1
 dataset=$2
 predictor=$3
 start_seed=$4
 experiment=$5
-N_MODELS=JOB_N_MODELS
+start_idx=$6
+N_MODELS=$7
+# N_MODELS=99999
+echo $searchspace
+echo $dataset
+echo $predictor
+echo $start_seed
+echo $experiment
 
 if [ -z "$searchspace" ]
 then
@@ -48,8 +55,8 @@ then
 fi
 
 start=`date +%s`
-
-python naslib/runners/benchmarks/runner.py --config-file configs/${experiment}/${predictor}/${searchspace}-${start_seed}/${dataset}/config_${start_seed}.yaml start_idx ${SLURM_ARRAY_TASK_ID} n_models $N_MODELS
+echo configs/${experiment}/${predictor}/${searchspace}-${start_seed}/${dataset}/config_${start_seed}.yaml
+python naslib/runners/benchmarks/runner.py --config-file configs/${experiment}/${predictor}/${searchspace}-${start_seed}/${dataset}/config_${start_seed}.yaml start_idx $start_idx n_models $N_MODELS
 
 end=`date +%s`
 runtime=$((end-start))

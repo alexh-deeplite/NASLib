@@ -16,7 +16,7 @@ train_size=train_size_$3
 start_seed=$4
 experiment=$5
 k=k_$6
-n_seeds=100
+n_seeds=$7
 
 if [ -z "$searchspace" ]
 then
@@ -49,12 +49,15 @@ then
 fi
 
 start=`date +%s`
-for t in $(seq 0 $n_seeds)
+for t in $(seq 1 $n_seeds)
 do
-    seed=$(($start_seed + $t))
+    seed=$(($start_seed + $t - 1))
+    echo seed $seed
     python naslib/runners/bbo/xgb_runner.py --config-file configs/${experiment}/${train_size}/$k/${searchspace}-${start_seed}/${dataset}/config_${seed}.yaml
 done
-
+# echo "waiting for seeds to train"
+# wait
+# echo "seeds completed"
 end=`date +%s`
 runtime=$((end-start))
 

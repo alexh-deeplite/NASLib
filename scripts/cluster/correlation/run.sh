@@ -48,7 +48,8 @@ fi
 
 start=`date +%s`
 
-seed=$(($start_seed + ${SLURM_ARRAY_TASK_ID}))
+# seed=$(($start_seed + ${SLURM_ARRAY_TASK_ID}))
+seed=$start_seed
 python naslib/runners/runner.py --config-file configs/${experiment}/${predictor}/${searchspace}-${start_seed}/${dataset}/config_${seed}.yaml
 
 end=`date +%s`
