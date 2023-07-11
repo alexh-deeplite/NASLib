@@ -26,6 +26,7 @@ def main(args):
             'dataset': args.dataset,
             'out_dir': args.out_dir,
             'predictor': args.k,
+            'predictor_type': args.predictor,
             'test_size': args.test_size,
             'train_size': args.train_size,
             'batch_size': args.batch_size,
@@ -35,7 +36,7 @@ def main(args):
             'train_portion': args.train_portion,
             'zc_ensemble': args.zc_ensemble,
             'zc_names': args.zc_names,
-            'zc_only': args.zc_only
+            'zc_only': args.zc_only,
         }
 
         with open(folder + f'/config_{i}.yaml', 'w') as fh:

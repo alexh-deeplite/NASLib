@@ -136,5 +136,7 @@ class BaseTree(Predictor):
 
         return mapping
 
+    def get_fscore(self):
+        return self.model.get_fscore()
 
 

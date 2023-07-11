@@ -162,24 +162,25 @@ def get_config_from_args(args=None):
         config.test_data_file = None
 
     # prepare the output directories
-    config.save = "{}/{}/{}/{}/{}/{}".format(
-        config.out_dir,
-        config.config_type,
-        config.search_space,
+    # config.save = "{}/{}/{}/{}/{}/{}".format(
+    #     config.out_dir,
+    #     config.config_type,
+    #     config.search_space,
+    #     config.dataset,
+    #     config.predictor,
+    #     config.seed,
+    # )
+
+    strings = (config.out_dir, config.config_type)
+    if config.config_type == 'model_only_zc':
+        strings += (config.predictor_type,)
+    strings += (config.search_space,
         config.dataset,
-        config.predictor,
-        config.seed,
-    )
+        config.predictor)
     if getattr(config, "train_size", None):
-        config.save = "{}/{}/{}/{}/{}/{}/{}".format(
-        config.out_dir,
-        config.config_type,
-        config.search_space,
-        config.dataset,
-        config.predictor,
-        config.train_size,  # needed for xgb 
-        config.seed,
-    )
+        strings += (config.train_size,)
+    strings += (config.seed,)
+    config.save = ("{}"+("/{}"*(len(strings)-1))).format(*strings)
     config.data = "{}/data".format(get_project_root())
 
     create_exp_dir(config.save)

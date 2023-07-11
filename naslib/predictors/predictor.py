@@ -35,3 +35,7 @@ class Predictor:
             Score of the model. Higher the score, higher the model is ranked.
         """
         pass
+
+    def get_fscore(self):
+        """Returns feature importance as a dictionary"""
+        pass

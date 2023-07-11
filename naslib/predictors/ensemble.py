@@ -4,6 +4,7 @@ import copy
 
 from naslib.predictors import Predictor
 from naslib.predictors.trees import XGBoost
+from naslib.predictors.sklearn import *
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +35,10 @@ class Ensemble(Predictor):
         trainable_predictors = {
             "xgb": XGBoost(
                 ss_type=self.ss_type, zc=self.zc, encoding_type="adjacency_one_hot", zc_only=self.zc_only
-            )
+            ),
+            "ridge": RidgeRegression(ss_type=self.ss_type, zc=self.zc, encoding_type="adjacency_one_hot", zc_only=self.zc_only),
+            "bayes": BayesRegression(ss_type=self.ss_type, zc=self.zc, encoding_type="adjacency_one_hot", zc_only=self.zc_only),
+            "trees": TreesRegression(ss_type=self.ss_type, zc=self.zc, encoding_type="adjacency_one_hot", zc_only=self.zc_only)
         }
 
         return [

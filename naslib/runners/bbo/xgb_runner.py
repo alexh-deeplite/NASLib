@@ -35,7 +35,7 @@ train_loader, _, _, _, _ = utils.get_train_val_loaders(config)
 
 ensemble = Ensemble(num_ensemble=1,
                     ss_type=search_space.get_type(),
-                    predictor_type='xgb',
+                    predictor_type=config.predictor_type,
                     zc=config.zc_ensemble,
                     zc_only=config.zc_only,
                     config=config)

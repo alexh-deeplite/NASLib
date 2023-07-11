@@ -7,6 +7,7 @@ dataset=$3
 start_seed=$4
 k=$5
 zc_names=$6
+predictor=$7
 # train_size=$7
 
 if [ -z "$experiment" ]
@@ -32,6 +33,12 @@ then
     start_seed=0
 fi
 
+if [ -z "$predictor" ]
+then
+    predictor="xgb"
+fi
+
+
 out_dir=run
 trials=100
 end_seed=$(($start_seed + $trials - 1))
@@ -52,11 +59,20 @@ if [[ "$experiment" == "xgb_only_zc" ]]; then
     zc_only=True
 fi
 
+
+if [[ "$experiment" == "model_only_zc" ]]; then
+    echo xgb_only_zc
+    zc_ensemble=True
+    zc_only=True
+fi
+
 if [[ "$experiment" == "xgb_only_adjacency" ]]; then
     echo xgb_only_adjacency
     zc_ensemble="False"
     zc_only="False"
 fi
+
+
 
 echo bash $zc_ensemble $zc_only
 
@@ -78,5 +94,5 @@ do
 python scripts/create_configs_xgb_correlation.py --start_seed $start_seed --trials $trials --out_dir $out_dir \
     --dataset=$dataset --search_space $search_space --config_root=$config_root --zc_names $zc_names \
     --train_size $train_size --experiment $experiment --zc_ensemble $zc_ensemble --zc_only $zc_only \
-    --test_size $test_size --k $k 
+    --test_size $test_size --k $k --predictor $predictor
 done

@@ -143,12 +143,11 @@ class ZCEnsembleEvaluator(object):
         ground_truths = [m.accuracy for m in test_models]
         scores = compute_scores(ground_truths, preds)
 
-        model = ensemble.ensemble[0].model
-        feature_importances = model.get_fscore()
+        predictor = ensemble.ensemble[0]
+        feature_importances = predictor.get_fscore()
 
         if hasattr(ensemble.ensemble[0], 'zc_to_features_map'):
             feature_mapping = ensemble.ensemble[0].zc_to_features_map
-
             zc_feature_importances = {zc_name: 0 for zc_name in self.zc_names}
             for zc_name, feature_name in feature_mapping.items():
                 if feature_name in feature_importances:
