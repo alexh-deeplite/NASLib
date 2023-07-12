@@ -7,8 +7,8 @@ def main(args):
     folder = os.path.join(
         args.config_root,
         args.experiment,
-        f'train_size_{args.train_size}',
-        f'k_{args.k}',
+        f'{args.train_size}',
+        f'{args.k}',
         f'{args.search_space}-{args.start_seed}',
         args.dataset
     )
@@ -24,6 +24,8 @@ def main(args):
             'seed': i,
             'search_space': args.search_space,
             'dataset': args.dataset,
+            'test_search_space': args.test_search_space,
+            'test_dataset': args.test_dataset,
             'out_dir': args.out_dir,
             'predictor': args.k,
             'predictor_type': args.predictor,
@@ -58,6 +60,8 @@ if __name__ == "__main__":
     parser.add_argument("--out_dir", type=str, default='run', help="Output directory")
     parser.add_argument("--epochs", type=int, default=150, help="How many search epochs")
     parser.add_argument("--search_space", type=str, default='nasbench201', help="nasbench101/201/301/transnasbench101")
+    parser.add_argument("--test_search_space", type=str, default='nasbench201', help="nasbench101/201/301/tnb101")
+    parser.add_argument("--test_dataset", type=str, default='cifar10', help="Which dataset")
     parser.add_argument("--experiment", type=str, default='xgb_correlation', help="Experiment type")
     parser.add_argument("--batch_size", type=int, default=32, help="Batch size")
     parser.add_argument("--cutout", type=bool, default=False, help="Cutout")

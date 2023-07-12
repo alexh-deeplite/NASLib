@@ -172,11 +172,15 @@ def get_config_from_args(args=None):
     # )
 
     strings = (config.out_dir, config.config_type)
-    if config.config_type == 'model_only_zc':
+    if 'model_only_zc' in config.config_type:
         strings += (config.predictor_type,)
     strings += (config.search_space,
         config.dataset,
         config.predictor)
+    if getattr(config, "test_search_space"):
+        strings += (config.test_search_space,)
+    if getattr(config, "test_dataset"):
+        strings += (config.test_dataset,)
     if getattr(config, "train_size", None):
         strings += (config.train_size,)
     strings += (config.seed,)
