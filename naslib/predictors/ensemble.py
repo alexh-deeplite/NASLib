@@ -18,17 +18,20 @@ class Ensemble(Predictor):
                  ss_type=None,
                  hpo_wrapper=True,
                  zc_only=False,
-                 config=None):
+                 config=None,
+                 pretrained_model=None,
+                 hyperparams=None):
         self.num_ensemble = num_ensemble
         self.predictor_type = predictor_type
         self.encoding_type = encoding_type
         self.ss_type = ss_type
         self.hpo_wrapper = hpo_wrapper
         self.config = config
-        self.hyperparams = None
+        self.hyperparams = hyperparams
         self.ensemble = None
         self.zc = zc
         self.zc_only = zc_only
+        self.pretrained_model = pretrained_model
 
     def get_ensemble(self):
 
@@ -38,9 +41,19 @@ class Ensemble(Predictor):
             ),
             "ridge": RidgeRegression(ss_type=self.ss_type, zc=self.zc, encoding_type="adjacency_one_hot", zc_only=self.zc_only),
             "bayes": BayesRegression(ss_type=self.ss_type, zc=self.zc, encoding_type="adjacency_one_hot", zc_only=self.zc_only),
-            "trees": TreesRegression(ss_type=self.ss_type, zc=self.zc, encoding_type="adjacency_one_hot", zc_only=self.zc_only)
+            "trees": TreesRegression(ss_type=self.ss_type, zc=self.zc, encoding_type="adjacency_one_hot", zc_only=self.zc_only),
+            "adapt": AdaptRegression2(ss_type=self.ss_type, zc=self.zc, encoding_type="adjacency_one_hot", zc_only=self.zc_only, pretrained_model=self.pretrained_model),
+            "mlp":   MLPRegression(ss_type=self.ss_type, zc=self.zc, encoding_type="adjacency_one_hot", zc_only=self.zc_only),
+            "torch_mlp": TorchMLPRegression(ss_type=self.ss_type, zc=self.zc, encoding_type="adjacency_one_hot", zc_only=self.zc_only)
         }
+        preds = [
+            copy.deepcopy(trainable_predictors[self.predictor_type])
+            for _ in range(self.num_ensemble)
+        ]
 
+        if self.hyperparams:
+            for pred in preds:
+                pred.set_hyperparams(self.hyperparams)
         return [
             copy.deepcopy(trainable_predictors[self.predictor_type])
             for _ in range(self.num_ensemble)
@@ -63,6 +76,24 @@ class Ensemble(Predictor):
             train_errors.append(train_error)
 
         return train_errors
+
+    def adapt_fit(self, xtrain, ytrain, xtarg, ytarg, train_info, targ_info):
+        if self.ensemble is None:
+            self.ensemble = self.get_ensemble()
+
+        if self.hyperparams is None and hasattr(self.ensemble[0], 'default_hyperparams'):
+            # todo: ideally should implement get_default_hyperparams() for all predictors
+            self.hyperparams = self.ensemble[0].default_hyperparams.copy()
+
+        self.set_hyperparams(self.hyperparams)
+
+        train_errors = []
+        logger.info(f'Training ensemble model of {self.num_ensemble} ({self.ensemble[0]}) with {len(ytrain)} datapoints')
+        train_error = self.ensemble[0].fit(xtrain, ytrain, xtarg, ytarg, train_info, targ_info)
+        train_errors.append(train_error)
+
+        return train_errors
+
 
     def query(self, xtest, info=None):
         predictions = []

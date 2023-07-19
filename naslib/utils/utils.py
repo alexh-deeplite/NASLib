@@ -177,12 +177,13 @@ def get_config_from_args(args=None):
     strings += (config.search_space,
         config.dataset,
         config.predictor)
-    if getattr(config, "test_search_space"):
+    if 'transfer' in config.config_type:
         strings += (config.test_search_space,)
-    if getattr(config, "test_dataset"):
         strings += (config.test_dataset,)
-    if getattr(config, "train_size", None):
-        strings += (config.train_size,)
+        strings += (config.test_train_size,)
+    else:
+        if hasattr(config, "train_size"):
+            strings += (config.train_size,)
     strings += (config.seed,)
     config.save = ("{}"+("/{}"*(len(strings)-1))).format(*strings)
     config.data = "{}/data".format(get_project_root())

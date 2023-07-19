@@ -4,6 +4,24 @@ import numpy as np
 from naslib.predictors.predictor import Predictor
 
 
+
+# class ModelRegistry:
+#     registry = {}
+
+#     def get_model(self, name):
+#         if 'adapt_' in name:
+#             model_name = name.replace('adapt', '')
+#             model_cls = self.registry[model_name]
+#             model = 
+        
+#     @classmethod
+#     def register_model(cls, model):
+#         if model.NAME in MODEL_REGISTRY:
+#             raise ValueError("name already exists")
+#         cls.registry[model.NAME] = model
+#         return model
+
+
 class ZCOnlyPredictor(Predictor):
     def __init__(self, encoding_type='adjacency_one_hot', ss_type='nasbench201', zc=False, zc_only=False, hpo_wrapper=False):
         super(Predictor, self).__init__()
@@ -80,11 +98,17 @@ class ZCOnlyPredictor(Predictor):
         return mapping
 
     def set_pre_computations(self, unlabeled=None, xtrain_zc_info=None, xtest_zc_info=None, unlabeled_zc_info=None):
-        if xtrain_zc_info is not None:
-            self.xtrain_zc_info = xtrain_zc_info
-            self._verify_zc_info(xtrain_zc_info['zero_cost_scores'])
-            self._set_zc_names(xtrain_zc_info['zero_cost_scores'])
-            self.zc_features = self.create_zc_feature_vector(xtrain_zc_info['zero_cost_scores'])
+        # if xtrain_zc_info is not None:
+        self.xtrain_zc_info = xtrain_zc_info
+        self._verify_zc_info(xtrain_zc_info['zero_cost_scores'])
+        self._set_zc_names(xtrain_zc_info['zero_cost_scores'])
+        self.zc_features = self.create_zc_feature_vector(xtrain_zc_info['zero_cost_scores'])
+
+        # if xtarg_zc_info is not None:
+        #     self.xtarg_zc_info = xtarg_zc_info
+        #     self._verify_zc_info(xtarg_zc_info['zero_cost_scores'])
+        #     self._set_zc_names(xtarg_zc_info['zero_cost_scores'])
+        #     self.targ_zc_features = self.create_zc_feature_vector(xtarg_zc_info['zero_cost_scores'])
 
     def _verify_zc_info(self, zero_cost_scores):
         zc_names = [set(zc_scores.keys()) for zc_scores in zero_cost_scores]

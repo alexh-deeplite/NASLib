@@ -1,18 +1,18 @@
 from typing import Dict, List, Union
 import numpy as np
 from naslib.predictors.sklearn import ZCOnlyPredictor
-from sklearn.neural_network import MLPRegressor
+from sklearn.linear_model import Ridge
 
 
 
-class MLPRegression(ZCOnlyPredictor):
+class RidgeRegression(ZCOnlyPredictor):
     @property
     def default_hyperparams(self):
-        return {'hidden_layer_sizes': (20,)}
+        return {'alpha': 1.0}
 
     def train(self, x, y, **kwargs):
         # init model
-        model = MLPRegressor(**self.hyperparams)
+        model = Ridge(**self.hyperparams)
         # train model
         model.fit(x, y)
 
@@ -54,7 +54,7 @@ class MLPRegression(ZCOnlyPredictor):
         self.hyperparams = params
 
     def get_fscore(self):
-        return dict([(name, weight) for name, weight in zip(self.zc_names, np.abs(self.model.coefs_[0]).sum(axis=1))])
+        return dict([(name, weight) for name, weight in zip(self.zc_names, self.model.coef_)])
 
 
 

@@ -12,10 +12,10 @@ echo "Running job $SLURM_JOB_NAME using $SLURM_JOB_CPUS_PER_NODE cpus per node w
 
 searchspace=$1
 dataset=$2
-train_size=train_size_$3
+train_size=$3
 start_seed=$4
 experiment=$5
-k=k_$6
+k=$6
 n_seeds=$7
 
 if [ -z "$searchspace" ]
@@ -47,7 +47,7 @@ then
     echo "Experiment argument not provided"
     exit 1
 fi
-
+# echo configs/${experiment}/${train_size}/$k/${searchspace}-${start_seed}/${dataset}/config_${seed}.yaml
 start=`date +%s`
 for t in $(seq 1 $n_seeds)
 do

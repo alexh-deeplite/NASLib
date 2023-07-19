@@ -9,6 +9,7 @@
 echo "Workingdir: $PWD";
 echo "Started at $(date)";
 echo "Running job $SLURM_JOB_NAME using $SLURM_JOB_CPUS_PER_NODE cpus per node with given JID $SLURM_JOB_ID on queue $SLURM_JOB_PARTITION";
+file=naslib/runners/bbo/model_transfer_runner.py
 
 searchspace=$1
 dataset=$2
@@ -17,6 +18,7 @@ start_seed=$4
 experiment=$5
 k=$6
 n_seeds=$7
+test_train_size=$8
 
 if [ -z "$searchspace" ]
 then
@@ -48,12 +50,21 @@ then
     exit 1
 fi
 
+if [ -z "$test_train_size" ]
+then
+    test_train_size=0
+fi
+
+if [[ $experiment == "finetune_transfer_model_only_zc" ]]; then
+    script=naslib/runners/bbo/test_model_transfer_runner_finetune.py
+fi
+
 start=`date +%s`
 for t in $(seq 1 $n_seeds)
 do
     seed=$(($start_seed + $t - 1))
     echo seed $seed
-    python naslib/runners/bbo/model_transfer_runner.py --config-file configs/${experiment}/${train_size}/$k/${searchspace}-${start_seed}/${dataset}/config_${seed}.yaml
+    python $script --config-file configs/${experiment}/${test_train_size}/$k/${searchspace}-${start_seed}/${dataset}/config_${seed}.yaml
 done
 # echo "waiting for seeds to train"
 # wait
